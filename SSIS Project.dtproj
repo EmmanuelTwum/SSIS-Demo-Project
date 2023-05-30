@@ -26,26 +26,26 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">AMALITECH-PC-00</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8Sk1h95nUWTvrjYcz7WGQAAAAACAAAAAAAQZgAAAAEAACAAAAA/qESU81t9NFNMfa7jOF5YjF6xmRNfHioQpsgQJ7/1HwAAAAAOgAAAAAIAACAAAAAW3RL9bUo48glVHZ0VuiYPxxCMA3eESYqN8fwoU+LdhJAAAABhoOAwjWPpi0SwM+hB6QpuftptCW2PRrNjUoraeyw+xF1o0X58fe6gPOvNyM8iZ8jq3JzMAa4SpUjMsuTelld7jrMflRxGia1JVQzgd/pO6wd2Iz6kDcGEqAahnKMrBrj9nl+0CKOhBUoArAFEVgyZsuHnDfYjMyIvvr1qtWZSrgtJWSkRKNll7FNOEnGS7m5AAAAA3X6auy1/sYc/Fz2I2MebdLyAA0ucHI9bnaanddFHxx0+sEP1wjnopVCsT6tjxcv88FFBx5of1uhM3ujMACaROA==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8Sk1h95nUWTvrjYcz7WGQAAAAACAAAAAAAQZgAAAAEAACAAAACMAeNx9bNCiwcCJx5MUa3eITSnqubytE5DgD5ZFmO1GwAAAAAOgAAAAAIAACAAAADJF3GxKyx+mCaeWQgQmZ74ebPGY83/bI/KyFb0eoxGaJAAAAB02GJsP8fv/e5Ajtz4vg2g2p133YD37MlpqsF3Q2SoYA8xh2ovNim+FWaLA4IhHv/MoVAv6axu5Jhu/184LQlKoaePMsGbGsUTiiNtA2OxtprDA8xZ7I5Io9bIa2Ra8/NA4tsh3R1ZQEAhGfzWYSuuQb5MUPBg0X8mHH974KaBHhUF617O1IhMOoqJo9wgES5AAAAA4cqyxDKv+LjY33XCbUEw3p/7He6cjv/6vxvtEV7P4+doFUh+fqij0bLw96AfGXwnlJKMewt6mzl0erRP1WoE8w==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
-          <SSIS:Package SSIS:Name="Package.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="DataFlow.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers />
         <SSIS:DeploymentInfo>
           <SSIS:ProjectConnectionParameters />
           <SSIS:PackageInfo>
-            <SSIS:PackageMetaData SSIS:Name="Package.dtsx">
+            <SSIS:PackageMetaData SSIS:Name="DataFlow.dtsx">
               <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{904C93BB-BEBC-4BA4-9927-FC73584A83C3}</SSIS:Property>
-                <SSIS:Property SSIS:Name="Name">Package</SSIS:Property>
+                <SSIS:Property SSIS:Name="ID">{0D2F0906-16CA-4A12-B5FA-CB0FB96BB8F1}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">DataFlow</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">2</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">3</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{A9D8A91A-B3E9-4862-A437-068999D491D3}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{422B446D-728D-4422-9E4B-893384603491}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>

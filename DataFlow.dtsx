@@ -5,14 +5,14 @@
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="AMALITECH-PC-00"
   DTS:CreatorName="AMALITECH-PC-00\Emmanuel Twum Osafo"
-  DTS:DTSID="{904C93BB-BEBC-4BA4-9927-FC73584A83C3}"
+  DTS:DTSID="{0D2F0906-16CA-4A12-B5FA-CB0FB96BB8F1}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="16.0.5035.3"
   DTS:LocaleID="8192"
-  DTS:ObjectName="Package"
+  DTS:ObjectName="DataFlow"
   DTS:PackageType="5"
-  DTS:VersionBuild="2"
-  DTS:VersionGUID="{A9D8A91A-B3E9-4862-A437-068999D491D3}">
+  DTS:VersionBuild="3"
+  DTS:VersionGUID="{422B446D-728D-4422-9E4B-893384603491}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
