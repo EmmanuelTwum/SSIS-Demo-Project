@@ -11,8 +11,8 @@
   DTS:LocaleID="8192"
   DTS:ObjectName="ForLoop Excel"
   DTS:PackageType="5"
-  DTS:VersionBuild="12"
-  DTS:VersionGUID="{689B5232-1C39-47A5-AC4D-78BAAC4E3A90}">
+  DTS:VersionBuild="14"
+  DTS:VersionGUID="{78DDAEF9-2655-45D4-82FC-4FF38E180DA7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -67,6 +67,15 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
+      DTS:DTSID="{DB078CCD-B962-49DE-A5BD-1EF2F3881F3B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilesLoaded">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
       DTS:DTSID="{108A1B53-8397-48F1-9949-0C2646D80165}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
@@ -117,11 +126,15 @@
           <DTS:PropertyExpression
             DTS:Name="SqlStatementSource">"INSERT INTO [audit_log]
 SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_WSTR, 50) @[User::RecordsImported] +", getdate()
+GO
+
+INSERT INTO [FileLoaded]
+SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', getdate()
 "</DTS:PropertyExpression>
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{F2F3B6CD-5B67-4534-919C-0E4CBEF74881}"
-              SQLTask:SqlStatementSource="INSERT INTO [audit_log]&#xA;SELECT 'ForLoop Excel', 'C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx', 0, getdate()&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="INSERT INTO [audit_log]&#xA;SELECT 'ForLoop Excel', 'C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx', 0, getdate()&#xA;GO&#xA;&#xA;INSERT INTO [FileLoaded]&#xA;SELECT 'ForLoop Excel', 'C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx', getdate()&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
@@ -460,6 +473,31 @@ SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_W
             </pipeline>
           </DTS:ObjectData>
         </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\get number of files loaded"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5E46330F-7CBE-476F-B2E9-26C9063A2397}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="get number of files loaded"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="SqlStatementSource">"SELECT COUNT(*) FROM [FileLoaded] WHERE PackageName ='"+ @[System::PackageName] +"' AND FileLoaded = '"+ @[User::FilePath_Excel] +"'
+"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{F2F3B6CD-5B67-4534-919C-0E4CBEF74881}"
+              SQLTask:SqlStatementSource="SELECT COUNT(*) FROM [FileLoaded] WHERE PackageName ='ForLoop Excel' AND FileLoaded = 'C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx'&#xA;"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::FilesLoaded" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
       </DTS:Executables>
       <DTS:PrecedenceConstraints>
         <DTS:PrecedenceConstraint
@@ -470,6 +508,16 @@ SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_W
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\Foreach Loop Container\Auditing Task" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{1ED29AFF-DD02-455C-81C8-DE35864AE739}"
+          DTS:EvalOp="3"
+          DTS:Expression="@[User::FilesLoaded]==0"
+          DTS:From="Package\Foreach Loop Container\get number of files loaded"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Foreach Loop Container\Data Flow Task" />
       </DTS:PrecedenceConstraints>
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
@@ -492,29 +540,29 @@ SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_W
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="150.4,41.6"
           Id="Package\Foreach Loop Container\Data Flow Task"
-          TopLeft="58.9142921126619,28.8235318355495" />
+          TopLeft="63.2000064713616,135.117650973343" />
         <NodeLayout
           Size="142.4,41.6"
           Id="Package\Foreach Loop Container\Auditing Task"
-          TopLeft="64.6285779242614,127.470592042567" />
+          TopLeft="64.6285779242616,246.764711362681" />
         <EdgeLayout
           Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
-          TopLeft="134.971435018462,70.4235318355495">
+          TopLeft="137.114292197812,176.717650973343">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,57.0470602070171"
+              EndConnector="0,70.0470603893374"
               Start="0,0"
-              End="0,49.5470602070171">
+              End="0,62.5470603893374">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,49.5470602070171" />
+                    End="0,62.5470603893374" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -523,11 +571,39 @@ SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_W
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\Foreach Loop Container\get number of files loaded"
+          TopLeft="52.4857205746128,30.6941187731535" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
+          TopLeft="136.042863522987,72.2941187731535">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,62.8235322001897"
+              Start="0,0"
+              End="0,55.3235322001897">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,55.3235322001897" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,19.6617661000948,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="265.6,223.2"
-          Size="265.6,266.4"
+          PanelSize="288.8,343.2"
+          Size="288.8,386.4"
           Id="Package\Foreach Loop Container"
           TopLeft="317.142862543768,100.94117788625" />
       </GraphLayout>
