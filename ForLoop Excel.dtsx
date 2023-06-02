@@ -11,8 +11,8 @@
   DTS:LocaleID="8192"
   DTS:ObjectName="ForLoop Excel"
   DTS:PackageType="5"
-  DTS:VersionBuild="10"
-  DTS:VersionGUID="{7CD0E854-806B-46FF-8AF5-62EB4148BF11}">
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{689B5232-1C39-47A5-AC4D-78BAAC4E3A90}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -65,6 +65,15 @@
       <DTS:VariableValue
         DTS:DataType="8">C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx</DTS:VariableValue>
     </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{108A1B53-8397-48F1-9949-0C2646D80165}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RecordsImported">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
@@ -94,6 +103,27 @@
       </DTS:ForEachEnumerator>
       <DTS:Variables />
       <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Auditing Task"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{D7E81312-9B14-4660-BAAC-5B335DD0E226}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Auditing Task"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="SqlStatementSource">"INSERT INTO [audit_log]
+SELECT '"+ @[System::PackageName] +"', '"+ @[User::FilePath_Excel] +"', "+ (DT_WSTR, 50) @[User::RecordsImported] +", getdate()
+"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{F2F3B6CD-5B67-4534-919C-0E4CBEF74881}"
+              SQLTask:SqlStatementSource="INSERT INTO [audit_log]&#xA;SELECT 'ForLoop Excel', 'C:\Local DB BAK\Sample Data Files\Excel\SalaryBreakdown2.xlsx', 0, getdate()&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\Foreach Loop Container\Data Flow Task"
           DTS:CreationName="Microsoft.Pipeline"
@@ -385,18 +415,62 @@
                     </output>
                   </outputs>
                 </component>
+                <component
+                  refId="Package\Foreach Loop Container\Data Flow Task\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RecordsImported</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Foreach Loop Container\Data Flow Task\Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Foreach Loop Container\Data Flow Task\Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Foreach Loop Container\Data Flow Task\Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
               </components>
               <paths>
                 <path
                   refId="Package\Foreach Loop Container\Data Flow Task.Paths[Excel Source Output]"
-                  endId="Package\Foreach Loop Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  endId="Package\Foreach Loop Container\Data Flow Task\Row Count.Inputs[Row Count Input 1]"
                   name="Excel Source Output"
                   startId="Package\Foreach Loop Container\Data Flow Task\Excel Source.Outputs[Excel Source Output]" />
+                <path
+                  refId="Package\Foreach Loop Container\Data Flow Task.Paths[Row Count Output 1]"
+                  endId="Package\Foreach Loop Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Foreach Loop Container\Data Flow Task\Row Count.Outputs[Row Count Output 1]" />
               </paths>
             </pipeline>
           </DTS:ObjectData>
         </DTS:Executable>
       </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{06A13883-4288-43F2-B7C2-89BE0D418443}"
+          DTS:From="Package\Foreach Loop Container\Data Flow Task"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Foreach Loop Container\Auditing Task" />
+      </DTS:PrecedenceConstraints>
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
@@ -418,16 +492,42 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="150.4,41.6"
           Id="Package\Foreach Loop Container\Data Flow Task"
-          TopLeft="28.914291601765,33.4117671940154" />
+          TopLeft="58.9142921126619,28.8235318355495" />
+        <NodeLayout
+          Size="142.4,41.6"
+          Id="Package\Foreach Loop Container\Auditing Task"
+          TopLeft="64.6285779242614,127.470592042567" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          TopLeft="134.971435018462,70.4235318355495">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,57.0470602070171"
+              Start="0,0"
+              End="0,49.5470602070171">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,49.5470602070171" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="213.6,130.4"
-          Size="214.4,173.6"
+          PanelSize="265.6,223.2"
+          Size="265.6,266.4"
           Id="Package\Foreach Loop Container"
           TopLeft="317.142862543768,100.94117788625" />
       </GraphLayout>
@@ -437,29 +537,79 @@
     design-time-name="Package\Foreach Loop Container\Data Flow Task">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="138.4,41.6"
           Id="Package\Foreach Loop Container\Data Flow Task\Excel Source"
-          TopLeft="262.285713592354,101.470587302244" />
+          TopLeft="268.714285130403,21.1764685290907" />
         <NodeLayout
           Size="170.4,41.6"
           Id="Package\Foreach Loop Container\Data Flow Task\OLE DB Destination"
           TopLeft="249.285718531025,222.529414885597" />
+        <NodeLayout
+          Size="129.6,41.6"
+          Id="Package\Foreach Loop Container\Data Flow Task\Row Count"
+          TopLeft="193.57143186793,118.74117806857" />
         <EdgeLayout
           Id="Package\Foreach Loop Container\Data Flow Task.Paths[Excel Source Output]"
-          TopLeft="332.985716061689,143.070587302244">
+          TopLeft="337.914285130403,62.7764685290907">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,79.4588275833527"
+              EndConnector="-79.542853262473,55.9647095394795"
               Start="0,0"
-              End="0,71.9588275833527">
+              End="-79.542853262473,48.4647095394795">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,71.9588275833527" />
+                    End="0,23.9823547697398" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.9823547697398"
+                    Point2="0,27.9823547697398"
+                    Point3="-4,27.9823547697398" />
+                  <mssgle:LineSegment
+                    End="-75.542853262473,27.9823547697398" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-75.542853262473,27.9823547697398"
+                    Point2="-79.542853262473,27.9823547697398"
+                    Point3="-79.542853262473,31.9823547697398" />
+                  <mssgle:LineSegment
+                    End="-79.542853262473,48.4647095394795" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Data Flow Task.Paths[Row Count Output 1]"
+          TopLeft="258.37143186793,160.34117806857">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="76.1142866630943,62.1882368170266"
+              Start="0,0"
+              End="76.1142866630943,54.6882368170266">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.0941184085133" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.0941184085133"
+                    Point2="0,31.0941184085133"
+                    Point3="4,31.0941184085133" />
+                  <mssgle:LineSegment
+                    End="72.1142866630943,31.0941184085133" />
+                  <mssgle:CubicBezierSegment
+                    Point1="72.1142866630943,31.0941184085133"
+                    Point2="76.1142866630943,31.0941184085133"
+                    Point3="76.1142866630943,35.0941184085133" />
+                  <mssgle:LineSegment
+                    End="76.1142866630943,54.6882368170266" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
