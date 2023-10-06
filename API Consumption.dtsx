@@ -11,8 +11,8 @@
   DTS:LocaleID="8192"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="7"
-  DTS:VersionGUID="{8879AED9-1ADB-446A-8ABD-EBB16FD25140}">
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{9AD0451F-854C-4CB3-9082-1DFA4FF71DDC}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -200,6 +200,10 @@ public class UserComponent: ScriptComponent
 
     public APIResultsBuffer APIResultsBuffer;
 
+    public CloudLayerBuffer CloudLayerBuffer;
+
+    public ObservationsBuffer ObservationsBuffer;
+
     public virtual void FinishOutputs()
     {
     }
@@ -213,6 +217,18 @@ public class UserComponent: ScriptComponent
             APIResultsBuffer = null;
         }
 
+        if (null != CloudLayerBuffer)
+        {
+            CloudLayerBuffer.SetEndOfRowset();
+            CloudLayerBuffer = null;
+        }
+
+        if (null != ObservationsBuffer)
+        {
+            ObservationsBuffer.SetEndOfRowset();
+            ObservationsBuffer = null;
+        }
+
     }
 
     public override void PrimeOutput(int Outputs, int[] OutputIDs, PipelineBuffer[] Buffers, OutputNameMap OutputMap)
@@ -222,6 +238,14 @@ public class UserComponent: ScriptComponent
             if(OutputIDs[Idx] == GetOutputID(OutputMap, @"APIResults"))
             {
                 APIResultsBuffer = new APIResultsBuffer(Buffers[Idx], GetColumnIndexes(OutputIDs[Idx]), OutputMap);
+            }
+            if(OutputIDs[Idx] == GetOutputID(OutputMap, @"CloudLayer"))
+            {
+                CloudLayerBuffer = new CloudLayerBuffer(Buffers[Idx], GetColumnIndexes(OutputIDs[Idx]), OutputMap);
+            }
+            if(OutputIDs[Idx] == GetOutputID(OutputMap, @"Observations"))
+            {
+                ObservationsBuffer = new ObservationsBuffer(Buffers[Idx], GetColumnIndexes(OutputIDs[Idx]), OutputMap);
             }
         }
 
@@ -416,6 +440,9 @@ using System;
 using System.Data;
 using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
 using Microsoft.SqlServer.Dts.Runtime.Wrapper;
+//using System.Security.Policy;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 #endregion
 
 /// <summary>
@@ -441,7 +468,7 @@ public class ScriptMain : UserComponent
      *  Variables.myStringVariable = "new value";
      */
     #endregion
-
+   
     #region Help:  Using Integration Services Connnection Managers
     /* Some types of connection managers can be used in this script component.  See the help topic
      * "Working with Connection Managers Programatically" for details.
@@ -545,6 +572,45 @@ public class ScriptMain : UserComponent
             APIResultsBuffer.AddRow();
             APIResultsBuffer.FileData.AddBlobData(ms.ToArray());
             APIResultsBuffer.FileName = filename;
+
+            //Load data into Observations
+            //Rewind the ms object
+            //Streams have a starting point. Need to go back to the beginning
+            ms.Position = 0;
+
+
+            //Deserialize (Parse) the Jsom
+            //Need a variable to put deserialized json
+
+            NOAAObserations obs = new NOAAObserations();
+
+            //Initialize the deserializer
+            DataContractJsonSerializer json = new DataContractJsonSerializer(obs.GetType());
+            obs = json.ReadObject(ms) as NOAAObservations;
+
+            //Only try to read the object if json is able to deserialize the text
+            if (obs != null)
+            {
+                // Write the variable to the output
+                ObservationsBuffer.AddRow();
+                ObservationsBuffer.ObservationID = obs.id;
+                ObservationsBuffer.Station       = obs.properties.station;
+                ObservationsBuffer.Longitude     = obs.geometry.coordinates[0];
+                ObservationsBuffer.Latitude      = obs.geometry.coordinates[1];
+
+                ObservationsBuffer.TimeStampUT = obs.properties.timestamp;
+                ObservationsBuffer.TemperatureValue = obs.properties.temperature.value;
+                ObservationsBuffer.TemperatureUnitCode = obs.properties.temperature.unitCode;
+                ObservationsBuffer.TemperatureQuality = obs.properties.temperature;
+
+
+
+
+
+
+            }
+
+
         }
         catch(Exception ex)
         {
@@ -576,7 +642,8 @@ public class ScriptMain : UserComponent
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>true</ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -600,6 +667,7 @@ public class ScriptMain : UserComponent
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.SqlServer.TxScript, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
@@ -758,6 +826,518 @@ public class APIResultsBuffer: ScriptBuffer
     }
 
 }
+
+public class CloudLayerBuffer: ScriptBuffer
+
+{
+    public CloudLayerBuffer(PipelineBuffer Buffer, int[] BufferColumnIndexes, OutputNameMap OutputMap)
+        : base(Buffer, BufferColumnIndexes, OutputMap)
+    {
+    }
+
+    public String Amount
+    {
+        set
+        {
+            this[0] = value;
+        }
+    }
+    public bool Amount_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(0);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String BaseUnitCode
+    {
+        set
+        {
+            this[1] = value;
+        }
+    }
+    public bool BaseUnitCode_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(1);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Decimal BaseValue
+    {
+        set
+        {
+            this[2] = value;
+        }
+    }
+    public bool BaseValue_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(2);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String ObservationID
+    {
+        set
+        {
+            this[3] = value;
+        }
+    }
+    public bool ObservationID_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(3);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    new public void AddRow()
+    {
+        base.AddRow();
+    }
+
+    new public void SetEndOfRowset()
+    {
+        base.SetEndOfRowset();
+    }
+
+    new public bool EndOfRowset()
+    {
+        return base.EndOfRowset();
+    }
+
+}
+
+public class ObservationsBuffer: ScriptBuffer
+
+{
+    public ObservationsBuffer(PipelineBuffer Buffer, int[] BufferColumnIndexes, OutputNameMap OutputMap)
+        : base(Buffer, BufferColumnIndexes, OutputMap)
+    {
+    }
+
+    public String Station
+    {
+        set
+        {
+            this[0] = value;
+        }
+    }
+    public bool Station_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(0);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String ObservationID
+    {
+        set
+        {
+            this[1] = value;
+        }
+    }
+    public bool ObservationID_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(1);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String Icon
+    {
+        set
+        {
+            this[2] = value;
+        }
+    }
+    public bool Icon_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(2);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String TextDescription
+    {
+        set
+        {
+            this[3] = value;
+        }
+    }
+    public bool TextDescription_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(3);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String RawMessage
+    {
+        set
+        {
+            this[4] = value;
+        }
+    }
+    public bool RawMessage_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(4);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String TimeStampUT
+    {
+        set
+        {
+            this[5] = value;
+        }
+    }
+    public bool TimeStampUT_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(5);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String ElevationUnitCode
+    {
+        set
+        {
+            this[6] = value;
+        }
+    }
+    public bool ElevationUnitCode_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(6);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Decimal ElevationValue
+    {
+        set
+        {
+            this[7] = value;
+        }
+    }
+    public bool ElevationValue_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(7);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String TemperatureQuality
+    {
+        set
+        {
+            this[8] = value;
+        }
+    }
+    public bool TemperatureQuality_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(8);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String TemperatureUnitCode
+    {
+        set
+        {
+            this[9] = value;
+        }
+    }
+    public bool TemperatureUnitCode_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(9);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Decimal TemperatureValue
+    {
+        set
+        {
+            this[10] = value;
+        }
+    }
+    public bool TemperatureValue_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(10);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Decimal DewpointValue
+    {
+        set
+        {
+            this[11] = value;
+        }
+    }
+    public bool DewpointValue_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(11);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Int32 DewpointUnitCode
+    {
+        set
+        {
+            this[12] = value;
+        }
+    }
+    public bool DewpointUnitCode_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(12);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Int32 DewpointQuality
+    {
+        set
+        {
+            this[13] = value;
+        }
+    }
+    public bool DewpointQuality_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(13);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String WindDirectionQuality
+    {
+        set
+        {
+            this[14] = value;
+        }
+    }
+    public bool WindDirectionQuality_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(14);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public Decimal WindDirectionValue
+    {
+        set
+        {
+            this[15] = value;
+        }
+    }
+    public bool WindDirectionValue_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(15);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    public String WindDirectionUnitCode
+    {
+        set
+        {
+            this[16] = value;
+        }
+    }
+    public bool WindDirectionUnitCode_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(16);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+    new public void AddRow()
+    {
+        base.AddRow();
+    }
+
+    new public void SetEndOfRowset()
+    {
+        base.SetEndOfRowset();
+    }
+
+    new public bool EndOfRowset()
+    {
+        return base.EndOfRowset();
+    }
+
+}
 ]]></arrayElement>
                     <arrayElement
                       dataType="System.String"><![CDATA[Project]]></arrayElement>
@@ -770,7 +1350,7 @@ public class APIResultsBuffer: ScriptBuffer
     <msb:CodeName>SC_f3de339bdbc54e8693ad6668f90fcc80</msb:CodeName>
     <msb:Language>msBuild</msb:Language>
     <msb:DisplayName>SC_f3de339bdbc54e8693ad6668f90fcc80</msb:DisplayName>
-    <msb:ProjectId>{15356202-5369-422E-B64A-A949A642A523}</msb:ProjectId>
+    <msb:ProjectId>{F6178CBF-EC8F-4DEC-88CD-10E3897FBD65}</msb:ProjectId>
   </msb:PropertyGroup>
   <msb:ItemGroup>
     <msb:Project Include="SC_f3de339bdbc54e8693ad6668f90fcc80.csproj" />
@@ -911,164 +1491,7 @@ namespace SC_f3de339bdbc54e8693ad6668f90fcc80.Properties {
                   name="BinaryCode"
                   state="cdata">
                   <arrayElements
-                    arrayElementCount="2">
-                    <arrayElement
-                      dataType="System.String"><![CDATA[SC_f3de339bdbc54e8693ad6668f90fcc80.dll]]></arrayElement>
-                    <arrayElement
-                      dataType="System.String"><![CDATA[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
-BQATAAAAEACOBuoGVQAGABYAAAEQAFQH6gZtAAgAGgAGAF0H5AAGACUH6AAGAJwF7AABANwH8AAB
-ANwH8AARAJgE9AARAJIB+AARAOoA/ABQIAAAAADGAIkDBgABAFggAAAAAMYAlAMGAAEAYCAAAAAA
-xgB/BwYAAQAoIQAAAACGGD0GBgABADAhAAAAAIYYPQZqAAEAOyEAAAAAhgjAAAABBABVIQAAAACG
-CBsEjAAEAF4hAAAAAIYINwEQAAQAaCEAAAAAhggvBAUBBQB/IQAAAACGAJkIBgAGAIchAAAAAIYA
-pQcGAAYAjyEAAAAAhgCoB4wABgCXIQAAAACGGD0GBgAGALchAAAAAMYBcQcGAAYAuSEAAAAAgQDW
-AAYABgDYIQAAAADGAEkICgEGALchAAAAAMYBfwcGAAoALSIAAAAAhhg9BhYBCgA8IgAAAACGGD0G
-FgELAEsiAAAAAIYIKgFbAAwAcSIAAAAAhgiMAFsADACXIgAAAACDGD0GBgAMAJ8iAAAAAJMIugUc
-AQwAyyIAAAAAkwh6ASEBDADSIgAAAACTCIYBJgEMANoiAAAAAJYItAcsAQ0A4SIAAAAAhhg9BgYA
-DQDpIgAAAACRGEMGMQENAAAAAQCzBQAAAgAvBwAAAwAxBQAAAQCgAwAAAQCgAwAAAQB3BwAAAgBK
-BgAAAwBpBwAABAAxBQAAAQDyBwAAAQDyBwAAAQCgAwkAPQYBABEAPQYGABkAPQYKACkAPQYQADEA
-PQYQADkAPQYQAEEAPQYQAEkAPQYQAFEAPQYQAFkAPQYQAGEAPQYQAGkAPQYGALEAPQYGANEAPQYV
-AOEAPQYGAKEAiQMGAKEAlAMGAOkApgMlAOkASwQqAPkAggUwAAEBwAcQAPkAygE3AHEAPQYGAAkB
-YAQ9ABkBEAVDAHEAoAhKAJkAtABPAKEAngBVAHkA+gBbACEBMwZfAIEAPQZqAIEAswV0AIEALwd4
-AIkAfwR8AIEAPASBAIEAiASGAIEAQwQBACkBPQYQAIEAmQgGAIEApQcGAIEAqAeMAKEAPQYGAKEA
-gACUAKEAQwebAKkAPQYGAKEAGQehADEBfwSnAKEAhAiuADkBVQi0AFkBGAG7AFkBqAjEALkAPQbK
-ANkAPQYGAC4ACwBRAS4AEwBaAS4AGwB5AS4AIwCCAS4AKwCrAS4AMwCrAS4AOwCxAS4AQwCCAS4A
-SwC+AS4AUwCrAS4AWwDcAUMAYwAmAuMAawAmAukAcwB5AQEBewAmAgkBcwB5ARsAkAADAAEABgAF
-AAcABwAIAAkAAADEADUBAAAfBDoBAAA7AT4BAAAzBDoBAAA7AT4BAACQAD4BAAC+BUIBAACaAUcB
-AAC4B0wBAgAGAAMAAgAHAAUAAQAIAAcAAQAJAAkAAgAUAAsAAgAVAA0AAgAXAA8AAgAYABEAAQAZ
-ABEAAgAaABMABIAAAAEAAAAAAAAAAAAAAAAAUwAAAAQAAAAAAAAAAAAAANIAzQAAAAAAEAAAAAAA
-AAAAAAAA2wD8BwAAAAAQAAAAAAAAAAAAAADbACgIAAAAAAQAAAAAAAAAAAAAANIAkQQAAAAAEAAA
-AAAAAAAAAAAA2wBeBQAAAAAQAAAAAAAAAAAAAADbADsFAAAAAAAAAAABAAAAmAYAAAAAAElEVFND
-b21wb25lbnRNZXRhRGF0YTEwMABJRFRTVmFyaWFibGUxMDAASURUU1ZhcmlhYmxlczEwMABJRFRT
-RXZhbHVhdG9yQ29udGV4dDEwMABTQ19mM2RlMzM5YmRiYzU0ZTg2OTNhZDY2NjhmOTBmY2M4MAA8
-TW9kdWxlPgBHZXRPdXRwdXRJRABnZXRfVVJMAFN5c3RlbS5JTwBnZXRfQ29tcG9uZW50TWV0YURh
-dGEAQWRkQmxvYkRhdGEAZ2V0X0ZpbGVEYXRhAG1zY29ybGliAE1hcmtPdXRwdXRzRmluaXNoZWQA
-ZGVmYXVsdEluc3RhbmNlAGdldF9NZXNzYWdlAFJ1bnRpbWVUeXBlSGFuZGxlAEdldFR5cGVGcm9t
-SGFuZGxlAGdldF9GaWxlTmFtZQBzZXRfRmlsZU5hbWUATWljcm9zb2Z0LlNxbFNlcnZlci5EdHMu
-UGlwZWxpbmUAU2VjdXJpdHlQcm90b2NvbFR5cGUAZ2V0X0N1bHR1cmUAc2V0X0N1bHR1cmUAcmVz
-b3VyY2VDdWx0dXJlAEFwcGxpY2F0aW9uU2V0dGluZ3NCYXNlAEh0dHBXZWJSZXNwb25zZQBHZXRS
-ZXNwb25zZQBFZGl0b3JCcm93c2FibGVTdGF0ZQBDb21waWxlckdlbmVyYXRlZEF0dHJpYnV0ZQBE
-ZWJ1Z2dlck5vblVzZXJDb2RlQXR0cmlidXRlAERlYnVnZ2FibGVBdHRyaWJ1dGUARWRpdG9yQnJv
-d3NhYmxlQXR0cmlidXRlAEFzc2VtYmx5VGl0bGVBdHRyaWJ1dGUAQXNzZW1ibHlUcmFkZW1hcmtB
-dHRyaWJ1dGUAVGFyZ2V0RnJhbWV3b3JrQXR0cmlidXRlAEFzc2VtYmx5Q29uZmlndXJhdGlvbkF0
-dHJpYnV0ZQBBc3NlbWJseURlc2NyaXB0aW9uQXR0cmlidXRlAENvbXBpbGF0aW9uUmVsYXhhdGlv
-bnNBdHRyaWJ1dGUAQXNzZW1ibHlQcm9kdWN0QXR0cmlidXRlAEFzc2VtYmx5Q29weXJpZ2h0QXR0
-cmlidXRlAFNTSVNTY3JpcHRDb21wb25lbnRFbnRyeVBvaW50QXR0cmlidXRlAEFzc2VtYmx5Q29t
-cGFueUF0dHJpYnV0ZQBSdW50aW1lQ29tcGF0aWJpbGl0eUF0dHJpYnV0ZQBQcmVFeGVjdXRlAFBv
-c3RFeGVjdXRlAHZhbHVlAHNldF9FeHBlY3QxMDBDb250aW51ZQBTeXN0ZW0uUnVudGltZS5WZXJz
-aW9uaW5nAFN0cmluZwBTeXN0ZW0uQ29tcG9uZW50TW9kZWwAU0NfZjNkZTMzOWJkYmM1NGU4Njkz
-YWQ2NjY4ZjkwZmNjODAuZGxsAGdldF9GaWxlRGF0YV9Jc051bGwAc2V0X0ZpbGVOYW1lX0lzTnVs
-bABTZXROdWxsAHNldF9TZWN1cml0eVByb3RvY29sAEdldFJlc3BvbnNlU3RyZWFtAE1lbW9yeVN0
-cmVhbQBnZXRfSXRlbQBzZXRfSXRlbQBTeXN0ZW0AcmVzb3VyY2VNYW4AU2NyaXB0TWFpbgBCbG9i
-Q29sdW1uAFN5c3RlbS5Db25maWd1cmF0aW9uAFN5c3RlbS5HbG9iYWxpemF0aW9uAFN5c3RlbS5S
-ZWZsZWN0aW9uAEludmFsaWRPcGVyYXRpb25FeGNlcHRpb24AQ29weVRvAEN1bHR1cmVJbmZvAE91
-dHB1dE5hbWVNYXAAT3V0cHV0TWFwAE1pY3Jvc29mdC5TcWxTZXJ2ZXIuRFRTUnVudGltZVdyYXAA
-TWljcm9zb2Z0LlNxbFNlcnZlci5EVFNQaXBlbGluZVdyYXAAQ3JlYXRlSHR0cABQaXBlbGluZUJ1
-ZmZlcgBBUElSZXN1bHRzQnVmZmVyAFNjcmlwdEJ1ZmZlcgBnZXRfUmVzb3VyY2VNYW5hZ2VyAFNl
-cnZpY2VQb2ludE1hbmFnZXIATWljcm9zb2Z0LlNxbFNlcnZlci5EdHMuUnVudGltZS5XcmFwcGVy
-AE1pY3Jvc29mdC5TcWxTZXJ2ZXIuRHRzLlBpcGVsaW5lLldyYXBwZXIARmlyZUVycm9yAC5jdG9y
-AC5jY3RvcgBPdXRwdXRJRHMAU3lzdGVtLkRpYWdub3N0aWNzAFN5c3RlbS5SdW50aW1lLkNvbXBp
-bGVyU2VydmljZXMAU3lzdGVtLlJlc291cmNlcwBTQ19mM2RlMzM5YmRiYzU0ZTg2OTNhZDY2Njhm
-OTBmY2M4MC5Qcm9wZXJ0aWVzLlJlc291cmNlcy5yZXNvdXJjZXMARGVidWdnaW5nTW9kZXMAU0Nf
-ZjNkZTMzOWJkYmM1NGU4NjkzYWQ2NjY4ZjkwZmNjODAuUHJvcGVydGllcwBnZXRfUmVhZE9ubHlW
-YXJpYWJsZXMAQnVmZmVyQ29sdW1uSW5kZXhlcwBHZXRDb2x1bW5JbmRleGVzAFNldHRpbmdzAENv
-bm5lY3Rpb25zAEJ1ZmZlcnMARmluaXNoT3V0cHV0cwBDcmVhdGVOZXdPdXRwdXRSb3dzAE9iamVj
-dABTeXN0ZW0uTmV0AFNldEVuZE9mUm93c2V0AGdldF9EZWZhdWx0AHNldF9Vc2VyQWdlbnQAVXNl
-ckNvbXBvbmVudABQYXJlbnRDb21wb25lbnQAU2NyaXB0Q29tcG9uZW50AE1pY3Jvc29mdC5TcWxT
-ZXJ2ZXIuVHhTY3JpcHQASHR0cFdlYlJlcXVlc3QATWljcm9zb2Z0LlNxbFNlcnZlci5QaXBlbGlu
-ZUhvc3QAUHJpbWVPdXRwdXQAR2V0VmFsdWVXaXRoQ29udGV4dABTY3JpcHRDb21wb25lbnRFdmFs
-Q29udGV4dABnZXRfRXZhbHVhdG9yQ29udGV4dABBZGRSb3cAVG9BcnJheQBnZXRfQXNzZW1ibHkA
-AAAAAFNTAFMASQBTACAAZgBvAHIAIABkAGUAbQBvACAAZQBtAG0AYQBuAHUAZQBsAHQAdwB1AG0A
-bwBzAGEAZgBvAEAAZwBtAGEAaQBsAC4AYwBvAG0AABVQAGEAcgBzAGUAIABEAGEAdABhAACAm0kA
-cwBOAHUAbABsACAAcAByAG8AcABlAHIAdAB5ACAAYwBhAG4AbgBvAHQAIABiAGUAIABzAGUAdAAg
-AHQAbwAgAEYAYQBsAHMAZQAuACAAQQBzAHMAaQBnAG4AIABhACAAdgBhAGwAdQBlACAAdABvACAA
-dABoAGUAIABjAG8AbAB1AG0AbgAgAGkAbgBzAHQAZQBhAGQALgAAFUEAUABJAFIAZQBzAHUAbAB0
-AHMAABFGAGkAbABlAE4AYQBtAGUAAAdVAFIATAAAcVMAQwBfAGYAMwBkAGUAMwAzADkAYgBkAGIA
-YwA1ADQAZQA4ADYAOQAzAGEAZAA2ADYANgA4AGYAOQAwAGYAYwBjADgAMAAuAFAAcgBvAHAAZQBy
-AHQAaQBlAHMALgBSAGUAcwBvAHUAcgBjAGUAcwAAAAC87nH2UGJiSbrnjKR4Hw6CAAQgAQEIAyAA
-AQUgAQEREQQgAQEOBSABARFlCQcFDg4SORI9AgQAAQECBQABARF5BgABEoCBDgUgABKAhQUgABKA
-jQYgAQESgI0EIAAdBQUgAQEdBQUgABKAkQMgAA4KIAYBCA4ODggQAgkgAwESRR0IEkkDBhJFAwYd
-CAQgARwIBCABAggFIAIBCBwDIAACAwcBCAYAAggSSQ4FIAEdCAgFIAASgJkGIAESgJ0cBQAAEoCh
-BiABHBKApQgAARKArRGAsQUgABKAtQcgAgEOEoC1CLd6XFYZNOCJCImEXc2AgMyRAwYSFAMGEhgD
-BhIMAwYSUQMGEl0DBhJhAwYSIAQgABJNBCABAQILIAQBCB0IHRJFEkkFIAEBElEEAAASXQQAABJh
-BQABARJhBAAAEiADAAABBCgAEk0DKAACAygADgQIABJdBAgAEmEECAASIAgBAAgAAAAAAB4BAAEA
-VAIWV3JhcE5vbkV4Y2VwdGlvblRocm93cwEIAQACAAAAAAAoAQAjU0NfZjNkZTMzOWJkYmM1NGU4
-NjkzYWQ2NjY4ZjkwZmNjODAAAAUBAAAAAAwBAAdIUCBJbmMuAAAdAQAYQ29weXJpZ2h0IEAgSFAg
-SW5jLiAyMDIzAABJAQAaLk5FVEZyYW1ld29yayxWZXJzaW9uPXY0LjcBAFQOFEZyYW1ld29ya0Rp
-c3BsYXlOYW1lEi5ORVQgRnJhbWV3b3JrIDQuNwQBAAAAALQAAADOyu++AQAAAJEAAABsU3lzdGVt
-LlJlc291cmNlcy5SZXNvdXJjZVJlYWRlciwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3Vs
-dHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5I1N5c3RlbS5SZXNv
-dXJjZXMuUnVudGltZVJlc291cmNlU2V0AgAAAAAAAAAAAAAAUEFEUEFEULQAAACANwAAAAAAAAAA
-AACaNwAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjDcAAAAAAAAAAAAAAABfQ29yRGxsTWFpbgBt
-c2NvcmVlLmRsbAAAAAAA/yUAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAEAEAAAABgAAIAAAAAAAAAAAAAAAAAAAAEAAQAAADAAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAEgA
-AABYQAAACAQAAAAAAAAAAAAACAQ0AAAAVgBTAF8AVgBFAFIAUwBJAE8ATgBfAEkATgBGAE8AAAAA
-AL0E7/4AAAEAAAABAAAAAAAAAAEAAAAAAD8AAAAAAAAABAAAAAIAAAAAAAAAAAAAAAAAAABEAAAA
-AQBWAGEAcgBGAGkAbABlAEkAbgBmAG8AAAAAACQABAAAAFQAcgBhAG4AcwBsAGEAdABpAG8AbgAA
-AAAAAACwBGgDAAABAFMAdAByAGkAbgBnAEYAaQBsAGUASQBuAGYAbwAAAEQDAAABADAAMAAwADAA
-MAA0AGIAMAAAABoAAQABAEMAbwBtAG0AZQBuAHQAcwAAAAAAAAAwAAgAAQBDAG8AbQBwAGEAbgB5
-AE4AYQBtAGUAAAAAAEgAUAAgAEkAbgBjAC4AAABwACQAAQBGAGkAbABlAEQAZQBzAGMAcgBpAHAA
-dABpAG8AbgAAAAAAUwBDAF8AZgAzAGQAZQAzADMAOQBiAGQAYgBjADUANABlADgANgA5ADMAYQBk
-ADYANgA2ADgAZgA5ADAAZgBjAGMAOAAwAAAAMAAIAAEARgBpAGwAZQBWAGUAcgBzAGkAbwBuAAAA
-AAAxAC4AMAAuADAALgAwAAAAcAAoAAEASQBuAHQAZQByAG4AYQBsAE4AYQBtAGUAAABTAEMAXwBm
-ADMAZABlADMAMwA5AGIAZABiAGMANQA0AGUAOAA2ADkAMwBhAGQANgA2ADYAOABmADkAMABmAGMA
-YwA4ADAALgBkAGwAbAAAAFYAGQABAEwAZQBnAGEAbABDAG8AcAB5AHIAaQBnAGgAdAAAAEMAbwBw
-AHkAcgBpAGcAaAB0ACAAQAAgAEgAUAAgAEkAbgBjAC4AIAAyADAAMgAzAAAAAAAqAAEAAQBMAGUA
-ZwBhAGwAVAByAGEAZABlAG0AYQByAGsAcwAAAAAAAAAAAHgAKAABAE8AcgBpAGcAaQBuAGEAbABG
-AGkAbABlAG4AYQBtAGUAAABTAEMAXwBmADMAZABlADMAMwA5AGIAZABiAGMANQA0AGUAOAA2ADkA
-MwBhAGQANgA2ADYAOABmADkAMABmAGMAYwA4ADAALgBkAGwAbAAAAGgAJAABAFAAcgBvAGQAdQBj
-AHQATgBhAG0AZQAAAAAAUwBDAF8AZgAzAGQAZQAzADMAOQBiAGQAYgBjADUANABlADgANgA5ADMA
-YQBkADYANgA2ADgAZgA5ADAAZgBjAGMAOAAwAAAANAAIAAEAUAByAG8AZAB1AGMAdABWAGUAcgBz
-AGkAbwBuAAAAMQAuADAALgAwAC4AMAAAADgACAABAEEAcwBzAGUAbQBiAGwAeQAgAFYAZQByAHMA
-aQBvAG4AAAAxAC4AMAAuADAALgAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAADAAAAKw3AAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==]]></arrayElement>
-                  </arrayElements>
+                    arrayElementCount="0" />
                 </property>
                 <property
                   dataType="System.String"
@@ -1103,7 +1526,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==]]></arrayElement>
                   dataType="System.String"
                   description="Checksum to match component metedata against compiled codes."
                   name="MetadataChecksum140"
-                  typeConverter="NOTBROWSABLE">A7</property>
+                  typeConverter="NOTBROWSABLE">65</property>
                 <property
                   dataType="System.String"
                   name="UserComponentTypeName">Microsoft.ScriptComponentHost</property>
@@ -1126,6 +1549,158 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==]]></arrayElement>
                       length="150"
                       lineageId="Package\Load Weather data\Script Component.Outputs[APIResults].Columns[FileName]"
                       name="FileName" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Weather data\Script Component.Outputs[CloudLayer]"
+                  hasSideEffects="true"
+                  name="CloudLayer">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[Amount]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[Amount]"
+                      name="Amount" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[BaseUnitCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[BaseUnitCode]"
+                      name="BaseUnitCode" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[BaseValue]"
+                      dataType="numeric"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[BaseValue]"
+                      name="BaseValue"
+                      precision="18" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[ObservationID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[CloudLayer].Columns[ObservationID]"
+                      name="ObservationID" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Weather data\Script Component.Outputs[Observations]"
+                  hasSideEffects="true"
+                  name="Observations">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[Station]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[Station]"
+                      name="Station" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ObservationID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ObservationID]"
+                      name="ObservationID" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[Icon]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[Icon]"
+                      name="Icon" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TextDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TextDescription]"
+                      name="TextDescription" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[RawMessage]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[RawMessage]"
+                      name="RawMessage" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TimeStampUT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TimeStampUT]"
+                      name="TimeStampUT" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ElevationUnitCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ElevationUnitCode]"
+                      name="ElevationUnitCode" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ElevationValue]"
+                      dataType="numeric"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[ElevationValue]"
+                      name="ElevationValue"
+                      precision="18" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureQuality]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureQuality]"
+                      name="TemperatureQuality" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureUnitCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureUnitCode]"
+                      name="TemperatureUnitCode" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureValue]"
+                      dataType="decimal"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[TemperatureValue]"
+                      name="TemperatureValue" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointValue]"
+                      dataType="decimal"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointValue]"
+                      name="DewpointValue" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointUnitCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointUnitCode]"
+                      name="DewpointUnitCode" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointQuality]"
+                      dataType="i4"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[DewpointQuality]"
+                      name="DewpointQuality" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionQuality]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionQuality]"
+                      name="WindDirectionQuality" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionValue]"
+                      dataType="numeric"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionValue]"
+                      name="WindDirectionValue"
+                      precision="18" />
+                    <outputColumn
+                      refId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionUnitCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Load Weather data\Script Component.Outputs[Observations].Columns[WindDirectionUnitCode]"
+                      name="WindDirectionUnitCode" />
                   </outputColumns>
                   <externalMetadataColumns />
                 </output>
@@ -1170,37 +1745,37 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==]]></arrayElement>
         <NodeLayout
           Size="164,42.6666666666667"
           Id="Package\Load Weather data\Script Component"
-          TopLeft="318.124995259568,246.349995594919" />
+          TopLeft="318.749995250255,246.999995583296" />
         <NodeLayout
           Size="149.333333333334,42.6666666666667"
           Id="Package\Load Weather data\Export Column"
           TopLeft="315.624995296821,391.299993003011" />
         <EdgeLayout
           Id="Package\Load Weather data.Paths[APIResults]"
-          TopLeft="400.124995259568,289.016662261585">
+          TopLeft="400.749995250255,289.666662249962">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-9.8333332960807,102.283330741426"
+              EndConnector="-10.4583332867675,101.633330753048"
               Start="0,0"
-              End="-9.8333332960807,94.7833307414255">
+              End="-10.4583332867675,94.1333307530484">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,47.1416653707128" />
+                    End="0,46.8166653765242" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,47.1416653707128"
-                    Point2="0,51.1416653707128"
-                    Point3="-4,51.1416653707128" />
+                    Point1="0,46.8166653765242"
+                    Point2="0,50.8166653765242"
+                    Point3="-4,50.8166653765242" />
                   <mssgle:LineSegment
-                    End="-5.8333332960807,51.1416653707128" />
+                    End="-6.45833328676747,50.8166653765242" />
                   <mssgle:CubicBezierSegment
-                    Point1="-5.8333332960807,51.1416653707128"
-                    Point2="-9.8333332960807,51.1416653707128"
-                    Point3="-9.8333332960807,55.1416653707128" />
+                    Point1="-6.45833328676747,50.8166653765242"
+                    Point2="-10.4583332867675,50.8166653765242"
+                    Point3="-10.4583332867675,54.8166653765242" />
                   <mssgle:LineSegment
-                    End="-9.8333332960807,94.7833307414255" />
+                    End="-10.4583332867675,94.1333307530484" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
