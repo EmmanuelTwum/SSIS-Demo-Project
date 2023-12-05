@@ -26,13 +26,14 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">AMALITECH-PC-00</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnbgnMNcgIkiiFwFsZk/A+wAAAAACAAAAAAAQZgAAAAEAACAAAACMZZH75zm/xdzOLBZZpw+pMRbOJKLgTteDPqsCN1ScdwAAAAAOgAAAAAIAACAAAAD9xR3icn5E/0/jppopgZGNI20HRXnlGZ4SAGhzjrhY6pAAAADCeF8DYUaccZfMhgk5BlVJZ8LpbK2tz4LHWeRaXUSkQrRnpW9b0B+JOqAHuK/KyzvzWcw898mBhRCRhQ1ZgwCglKDqnrkRSyDUKYCYV1XPWSJ0V+fbRBwfxJZ8pH7VLc7jSvQ+/cqIgHjzDpq7eL7Ll03zt+xrQxGz0FfyziLMip+rlwVdSwEonFwNBEeFsu9AAAAAB+ciM1mp4b6xU7WwQO5Cpf+Sw6ujykzePA94GwZvsLAZa7SYfq/C0bXcTB6IstJ12jaEy3fkCKRDFKSNx4xeew==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA/P8o3ghTwE6ArAK86Hy95QAAAAACAAAAAAAQZgAAAAEAACAAAABTbPkU2jHycdqb68BR+lm2Htu/SUAxddsL4XS7WzMkEgAAAAAOgAAAAAIAACAAAAC7Autdy7V2Z6EGUXN2RKNxnQM7lIbEOpMFwjJ1nJZSi5AAAAApg8PnuLZz0sgOcrwwYYJlFTH5S6vzcJI7MgIjpcvzDIZFwxXyHC6CVYCF10H/Y0eROmYGtN+hfNXDb80Z35pNiP3vRteKBUpLjg9jPdm9Afil9P4QxnD/Esjn7WsfQESc64SzoVrEBDOgZS6Gy6xypEA5i6AOh+74dksGn5ankDPOY9sGdyWHZASxnDCwV+1AAAAApbMtYVsnTn817QatWkC2eS3rLrJ9IkHRkbxPZbYIioBAHDCfXHsCARX+jBK2ufgCRXbwDWPMXq0vic5o32ZcgA==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
           <SSIS:Package SSIS:Name="DataFlow.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="ForLoop Excel.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="API Consumption.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Google Analytics.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers />
         <SSIS:DeploymentInfo>
@@ -986,10 +987,10 @@
                 <SSIS:Property SSIS:Name="Name">Package1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">10</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">12</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{FB478392-30C9-4BCE-9765-0C3F185C1BF4}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{9AD0451F-854C-4CB3-9082-1DFA4FF71DDC}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -1025,6 +1026,23 @@
                   </SSIS:Properties>
                 </SSIS:Parameter>
               </SSIS:Parameters>
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Google Analytics.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{8F8DAB22-AA36-4043-9931-BD0A6C66DA8A}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Google Analytics</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">1</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{FA52CE19-4331-4F25-96A0-4D28B7839D63}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
             </SSIS:PackageMetaData>
           </SSIS:PackageInfo>
         </SSIS:DeploymentInfo>
