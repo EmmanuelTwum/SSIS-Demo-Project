@@ -1,0 +1,1034 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="12/5/2023 6:00:47 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="EMMANUEL-PC"
+  DTS:CreatorName="AzureAD\EmmanuelTwumOsafo"
+  DTS:DTSID="{8F8DAB22-AA36-4043-9931-BD0A6C66DA8A}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5270.0"
+  DTS:LocaleID="8192"
+  DTS:ObjectName="Google Analytics"
+  DTS:PackageType="5"
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{1984077E-434E-481E-BDE9-3E1BD9FF4DCA}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[data-science.ck0dwzfc16xf.eu-west-1.rds.amazonaws.com.Warehouse.admin]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{A5D2AC05-6FC0-484E-B633-229062CFB8FC}"
+      DTS:ObjectName="data-science.ck0dwzfc16xf.eu-west-1.rds.amazonaws.com.Warehouse.admin">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=data-science.ck0dwzfc16xf.eu-west-1.rds.amazonaws.com;User ID=admin;Initial Catalog=Warehouse;Provider=SQLNCLI11.1;Application Name=SSIS-Google Analytics-{A5D2AC05-6FC0-484E-B633-229062CFB8FC}data-science.ck0dwzfc16xf.eu-west-1.rds.amazonaws.com.Warehouse.ad;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA/P8o3ghTwE6ArAK86Hy95QAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAZA9jLGwqJ7WaH4VyOv4CZsrZxz5aeIX9lh1b8YkrJKwAAAAAOgAAAAAIAACAAAABakVX72nA/9/C76ePuJ2j/UXPk9OH5c6jfW8g/VFKqFSAAAACcam3oHCDekuj5leTdUaOIMvZk04PhF3WcfXapzohhS0AAAABhnpDgJWpwhXWpravfxVkaRy3L6WwLtdideoPuj3+iICSNVwiMBeSW6HsPBbzBLThMlk26hVYPA0RVHtDO4Aa6</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Emmanuel-PC]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{27E438B8-088F-40A4-843E-BD986601F00C}"
+      DTS:ObjectName="Emmanuel-PC">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=Emmanuel-PC;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Google Analytics-{27E438B8-088F-40A4-843E-BD986601F00C}Emmanuel-PC;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Emmanuel-PC.SSIS Demo]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{08D476F3-85F8-4A4C-B5F7-2DD4ED68E8AA}"
+      DTS:ObjectName="Emmanuel-PC.SSIS Demo">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=Emmanuel-PC;Initial Catalog=SSIS Demo;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Google Analytics-{08D476F3-85F8-4A4C-B5F7-2DD4ED68E8AA}Emmanuel-PC.SSIS Demo;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[GoogleData 1]"
+      DTS:CreationName="ZS-GOOGLE-DATA"
+      DTS:DTSID="{4A8A77C0-AA4C-47AD-8DBF-91FF86A0104D}"
+      DTS:ObjectName="GoogleData 1">
+      <DTS:ObjectData>
+        <ConnectionManager
+          ConnectionString="ServiceType=GoogleAnalytics;ServiceUrl=;AuthType=OAuth2;ServiceEmail=;CertificateType=P12File;CertificateFile=;AppVer=2;PropertyType=GA3;AuthUrl=https://accounts.google.com/o/oauth2/auth;TokenUrl=https://accounts.google.com/o/oauth2/token;RequestTokenUrl=;ClientId=;Scope=;Timeout=100000;UseCustomApp=False;CustomAuthHeader=;CustomTokenPrefix=;EnableOAuthOverUrl=False;RefreshTokenFilePath=;RetryMode=None;RetryCountMax=3;RetryWaitTimeMs=2000;RetryMultiplyWaitTime=False;RetryMessageList=;RetryStatusCodeList=;ConnectionStringFile=;RetainSameConnection=False;UseProxy=False;ProxyUrl=;UseProxyCreds=False;ProxyUserName=;DoNotUseDefaultProxy=False"
+          ConnectByProxy="False">
+          <RefreshToken
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA/P8o3ghTwE6ArAK86Hy95QAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAD++QteQtPhwJxCTI3jPIh5w/vf8x+n9hk3zpPRmUJJbgAAAAAOgAAAAAIAACAAAAA15YrmEM6kEOnCWQjLnRWv43XkKYoHTj1gL+DlxSR0qtAAAACqxJQEI0b50ZYL1QriPU9NrdBILK5drmV9bOwP+gs69mLp/WegP9txonUK/5F8V5VtOZf4GCDif4LSTSQsYZ9VIylHlB88p9SwktbVGIJO9k3hpWcEpCRfEh+lRZEUIV00l1NcA31TNHPo9TJZfg4kpUAwG4Yzj4cuWrErexVOakuYUHE84frO37t3dtyupG+xgxNeKEuPAuLi4qxDVqBEa0USUi7ApMSbq5P5O2w7A4agFMQVJllJ5nAND82ARCz9EBfihdMa+RjnLdSBSjjDQAAAAM3KslGKIKVCi48M/c5Dcsxpv/9pNYQl8+zamizy8qpTDW3+vXyKeMJ0j2b7smNYeRXyK7wzA8Rzh06npFYEE+o</RefreshToken>
+        </ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Read Data from Google Analytics"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{BE0F953C-86E3-4152-A992-2F8E03F7224C}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Read Data from Google Analytics"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Read Data from Google Analytics\Google Analytics Source"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Google Analytics Source; ZappySys LLC (c) All Rights Reserved; SSIS PowerPack; http://www.zappysys.com/support"
+              description="Google Analytics Source is used to read data from Google Analytics Service. You can read various dimensions and matrix for given date range"
+              name="Google Analytics Source"
+              usesDispositions="true"
+              version="3">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="LoggingMode determines how much information is logged during Package Execution. Set Logging mode to Debugging for maximum log."
+                  expressionType="Notify"
+                  name="LoggingMode"
+                  typeConverter="ZappySys.PowerPack.Common.LoggingMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="When you enable this property it will prefix timestamp before Log messages."
+                  expressionType="Notify"
+                  name="PrefixTimestamp">false</property>
+                <property
+                  dataType="System.Null"
+                  expressionType="Notify"
+                  name="SelfRef"
+                  typeConverter="NOTBROWSABLE" />
+                <property
+                  dataType="System.Int32"
+                  description="Query mode for google data. In Automatic mode you can specify various properties and it will create url for you."
+                  expressionType="Notify"
+                  name="QueryMode"
+                  typeConverter="ZappySys.GoogleData.Common.GoogleDataQueryMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="Direct URL for query. This is only applicable when QueryMode=DirectUrl. User pass all parameters in query string using full URL"
+                  expressionType="Notify"
+                  name="QueryUrl"></property>
+                <property
+                  dataType="System.String"
+                  description="Request Body with parameters for GA4. This is only applicable when QueryMode=DirectUrl. User pass all parameters in query string using full URL"
+                  expressionType="Notify"
+                  name="QueryBody"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Predefined settings for query. This is great way to start with predefined templates so you don't have learn about various settings."
+                  expressionType="Notify"
+                  name="QueryTemplate"
+                  typeConverter="ZappySys.GoogleData.Common.GoogleDataQueryTemplate">5</property>
+                <property
+                  dataType="System.String"
+                  description="Web profile ID(s) or expression to select multiple profiles for which you want to retrieve data. This is the code of the website we have paired with the Reporting API. This property support filter by account, tracker and profile. You can use id or name in the advanced expression.&#xA;&#xA;Syntax (Simple Select): {profile-id1}[,profile-id2]....[,profile-idN]&#xA;--OR--&#xA;Syntax (Advanced Select): [accounts={account-id1,[account-id1]...[account-idN]}|{regex:expression-for-account-name}][;trackers={tracker-id1,[tracker-id1]...[tracker-idN]}|{regex:expression-for-tracker-name}] [;profiles={profile-id1,[profile-id1]...[profile-idN]}|{regex:expression-for-profile-name}]&#xA;&#xA;--------------Examples------------&#xA;Here are some examples of different ways you can supply list of profile names or ids&#xA;//1. Extract data from single profile (i.e. view). Use Single Profile ID.&#xA;100222333&#xA;&#xA;//2. Extract data from multiple profiles (i.e. views). Use Profile ID list. In below example extract from View ID 100222333 and 100222444&#xA;100222333,100222444&#xA;--OR--&#xA;profiles=100222333,100222444&#xA;&#xA;//3. Extract data from all accounts where profile name contains words like &quot;blogs&quot; or &quot;help&quot; or &quot;test&quot;. You can filter based on name by using &quot;regex:&quot; prefix. If &quot;regex:&quot; prefix not specified then it will treat value as ID(s).&#xA;profiles=regex:(blogs|help|test)&#xA;&#xA;//4. Extract data from all accounts where profile name DOES NOT contain words like &quot;demo&quot; or &quot;test&quot;. You can filter based on name by using &quot;regex:&quot; prefix. If &quot;regex:&quot; prefix not specified then it will treat value as ID(s).&#xA;profiles=regex:^((?!demo|test).)*$&#xA;&#xA;//5. Extract data from account names like &quot;demo&quot; --OR-- profile names like &quot;help&quot; or &quot;test&quot;&#xA;accounts=regex:demo;profiles=regex:(help|test)&#xA;&#xA;//6. Extract data from all profiles of account IDs 10000001 and 10000002 and any profile names like &quot;help&quot; or &quot;test&quot;&#xA;accounts=10000001,10000002;profiles=regex:(help|test)&#xA;&#xA;//7. Extract data for all profiles found under Tracker names like UA-100000-???? (i.e. UA-100000-1, UA-100000-2 ....)&#xA;trackers=regex:UA-1000000-\d+;&#xA;&#xA;//8. Extract data for profile names like &quot;test&quot; or &quot;demo&quot; and profiles under Tracker names like UA-100000-???? (i.e. UA-100000-1, UA-100000-2 ....)&#xA;trackers=regex:UA-1000000-\d+;profiles=regex:(test|demo)&#xA;&#xA;//9. Extract data for account name start with word &quot;Zappy&quot; or any profile name contains word like &quot;test&quot; or &quot;demo&quot;&#xA;accounts=regex:^Zappy;profiles=regex:(test|demo)&#xA;&#xA;"
+                  expressionType="Notify"
+                  name="ProfileId">profiles=216357247;</property>
+                <property
+                  dataType="System.Int32"
+                  description="Date range type for report. Use Custom date range if you have dynamic date range not listed in predefined list"
+                  expressionType="Notify"
+                  name="DateRangeType"
+                  typeConverter="ZappySys.Common.DateRangeType">0</property>
+                <property
+                  dataType="System.String"
+                  description="Start date for report date range. All Analytics data requests must specify a date range. If you do not include start-date and end-date parameters in the request, the server returns an error. Date values can be for a specific date by using the pattern YYYY-MM-DD or relative by using today, yesterday, or the NdaysAgo pattern. Values must match [0-9]{4}-[0-9]{2}-[0-9]{2}|today|yesterday|[0-9]+(daysAgo). The earliest valid start-date is 2005-01-01. There is no upper limit restriction for a start-date.Relative dates are always relative to the current date at the time of the query and are based on the timezone of the view (profile) specified in the query. Example date range for the last 10 days (starting today) using relative dates: ReportStartDate=9daysAgo and ReportEndDate=today. You may also use variable placeholders e.g. {{User::varStartDateString}}"
+                  expressionType="Notify"
+                  name="ReportStartDate">2019-01-01</property>
+                <property
+                  dataType="System.String"
+                  description="End date for report date range. All Analytics data requests must specify a date range. If you do not include start-date and end-date parameters in the request, the server returns an error. Date values can be for a specific date by using the pattern YYYY-MM-DD or relative by using today, yesterday, or the NdaysAgo pattern. Values must match [0-9]{4}-[0-9]{2}-[0-9]{2}|today|yesterday|[0-9]+(daysAgo). The earliest valid end-date is 2005-01-01. There is no upper limit restriction for an end-date. Relative dates are always relative to the current date at the time of the query and are based on the timezone of the view (profile) specified in the query. Example date range for the last 10 days (starting today) using relative dates: ReportStartDate=9daysAgo and ReportEndDate=today. You may also use variable placeholders e.g. {{User::varEndDateString}}"
+                  expressionType="Notify"
+                  name="ReportEndDate">2022-12-25</property>
+                <property
+                  dataType="System.String"
+                  description="The dimensions parameter breaks down metrics by common criteria; for example, by ga:browser or ga:city. While you can ask for the total number of pageviews to your site, it might be more interesting to ask for the number of pageviews broken down by browser. In this case, you'll see the number of pageviews from Firefox, Internet Explorer, Chrome, and so forth. &#xA;When using dimensions in a data request, be aware of the following constraints:&#xA;•You can supply a maximum of 7 dimensions in any query.&#xA;•You can not send a query composed only of dimensions: you must combine any requested dimensions with at least one metric.&#xA;•Only certain dimensions can be queried in the same query. Use the valid combination tool in the  Dimensions and Metrics Reference to see which dimensions can be used together.&#xA;"
+                  expressionType="Notify"
+                  name="Dimensions">ga:referralPath,ga:fullReferrer,ga:source,ga:medium,ga:sourceMedium,ga:date,ga:channelGrouping</property>
+                <property
+                  dataType="System.String"
+                  description="The aggregated statistics for user activity to your site, such as clicks or pageviews. If a query has no dimensions parameter, the returned metrics provide aggregate values for the requested date range, such as overall pageviews or total bounces. However, when dimensions are requested, values are segmented by dimension value. For example, ga:pageviews requested with ga:country returns the total pageviews per country. When requesting metrics, keep in mind: &#xA;•Any request must supply at least one metric; a request cannot consist only of dimensions.&#xA;•You can supply a maximum of 10 metrics for any query.&#xA;•Most combinations of metrics from multiple categories can be used together, provided no dimensions are specified.&#xA;•A metric can be used in combination with other dimensions or metrics, but only where valid combinations apply for that metric. See the Dimensions and Metrics Reference for details. &#xA;"
+                  expressionType="Notify"
+                  name="Metrics">ga:users,ga:newUsers,ga:sessions,ga:bounces,ga:sessionDuration,ga:organicSearches,ga:pageValue,ga:pageviews,ga:totalEvents,ga:socialInteractions</property>
+                <property
+                  dataType="System.String"
+                  description="A list of metrics and dimensions indicating the sorting order and sorting direction for the returned data.&#xA;•Sorting order is specified by the left to right order of the metrics and dimensions listed. &#xA;•Sorting direction defaults to ascending and can be changed to descending by using a minus sign (-) prefix on the requested field. &#xA;&#xA;Sorting the results of a query enables you to ask different questions about your data. For example, to address the question 'What are my top countries, and which browsers do they use most?' you can make a query with the following parameter. It sorts first by ga:country and then by ga:browser, both in ascending order:&#xA;sort=ga:country,ga:browser&#xA;&#xA;To answer the related question 'What are my top browsers, and which countries use them most?', you can make a query with the following parameter. It sorts first by ga:browser and then by ga:country, both in ascending order: sort=ga:browser,ga:country&#xA;&#xA;When using the sort parameter, keep in mind the following:&#xA;•Sort only by dimensions or metrics values that you have used in the dimensions or metrics parameters. If your request sorts on a field that is not indicated in either the dimensions or metrics parameter, you will receive a error. &#xA;•By default, strings are sorted in ascending alphabetical order&#xA; in en-US locale. &#xA;•Numbers are sorted in ascending numeric order by default. &#xA;•Dates are sorted in ascending order by date by default. &#xA;"
+                  expressionType="Notify"
+                  name="SortBy"></property>
+                <property
+                  dataType="System.String"
+                  description="The filters query string parameter restricts the data returned from your request. To use the filters parameter, supply a dimension or metric on which to filter, followed by the filter expression."
+                  expressionType="Notify"
+                  name="Filters"></property>
+                <property
+                  dataType="System.String"
+                  description="Segment for query. Segment can be defined using inbuilt segment id or use custom segment expression. For example to use in-built segment for referral; data you can use expression with just ID (e.g. gaid::-8)  OR use full expression (e.g. sessions::condition::ga:medium==referral). Use report (MetaData: Segments) under QueryMode=FromTemplate to get full detail about all in-built or custom segments. For more information on segments visit https://developers.google.com/analytics/devguides/reporting/core/v3/segments"
+                  expressionType="Notify"
+                  name="Segment"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum number of rows to include in each response (i.e. Batch Size). You can use this in combination with start-index to retrieve a subset of elements, or use it alone to restrict the number of returned elements, starting with the first. If max-results is not supplied, the query returns the default maximum of 1000 rows.The Analytics Core Reporting API returns a maximum of 10,000 rows per request, no matter how many you ask for. It can also return fewer rows than requested, if there aren't as many dimension segments as you expect. For instance, there are fewer than 300 possible values for ga:country, so when segmenting only by country, you can't get more than 300 rows, even if you set max-results to a higher value."
+                  expressionType="Notify"
+                  name="MaxResults">10000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Use this parameter to set the sampling level (i.e. the number of sessions used to calculate the result) for a reporting query. The allowed values are consistent with the web interface and include: &#xA;•DEFAULT — Returns response with a sample size that balances speed and accuracy.&#xA;•FASTER — Returns a fast response with a smaller sample size.&#xA;•HIGHER_PRECISION — Returns a more accurate response using a large sample size, but this may result in the response being slower.&#xA;If not supplied, the DEFAULT sampling level will be used.See the Sampling section for details on how to calculate the percentage of sessions that were used for a query."
+                  expressionType="Notify"
+                  name="SamplingLevel"
+                  typeConverter="ZappySys.GoogleData.Common.GoogleDataSamplingLevel">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum number of rows to return (To adjust batchsize check MaxResults property). 0=Unlimited"
+                  expressionType="Notify"
+                  name="MaxRows">0</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">ZappySys.GoogleAnalyticsSource</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Read Data from Google Analytics\Google Analytics Source.Connections[ZS-GOOGLE-DATA]"
+                  connectionManagerID="Package.ConnectionManagers[GoogleData 1]"
+                  connectionManagerRefId="Package.ConnectionManagers[GoogleData 1]"
+                  description="Runtime connection for this component"
+                  name="ZS-GOOGLE-DATA" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput]"
+                  errorOrTruncationOperation="Error"
+                  errorRowDisposition="FailComponent"
+                  name="GoogleAnalyticsSourceOutput"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[date]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[date]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[date]"
+                      name="date" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[users]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[users]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[users]"
+                      name="users" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[newUsers]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[newUsers]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[newUsers]"
+                      name="newUsers" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessions]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sessions]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessions]"
+                      name="sessions" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[bounces]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[bounces]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[bounces]"
+                      name="bounces" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessionDuration]"
+                      dataType="r8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sessionDuration]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessionDuration]"
+                      name="sessionDuration" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[organicSearches]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[organicSearches]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[organicSearches]"
+                      name="organicSearches" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageValue]"
+                      dataType="r8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[pageValue]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageValue]"
+                      name="pageValue" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageviews]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[pageviews]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageviews]"
+                      name="pageviews" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[totalEvents]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[totalEvents]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[totalEvents]"
+                      name="totalEvents" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[socialInteractions]"
+                      dataType="i8"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[socialInteractions]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[socialInteractions]"
+                      name="socialInteractions" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileId]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[profileId]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileId]"
+                      name="profileId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileName]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[profileName]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileName]"
+                      name="profileName" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[internalWebPropertyId]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[internalWebPropertyId]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[internalWebPropertyId]"
+                      name="internalWebPropertyId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[accountId]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[accountId]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[accountId]"
+                      name="accountId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[referralPath]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[referralPath]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[referralPath]"
+                      name="referralPath" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[fullReferrer]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[fullReferrer]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[fullReferrer]"
+                      name="fullReferrer" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[source]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[source]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[source]"
+                      name="source" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[medium]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[medium]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[medium]"
+                      name="medium" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sourceMedium]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sourceMedium]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sourceMedium]"
+                      name="sourceMedium" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[channelGrouping]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[channelGrouping]"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[channelGrouping]"
+                      name="channelGrouping" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[referralPath]"
+                      dataType="wstr"
+                      length="255"
+                      name="referralPath" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[fullReferrer]"
+                      dataType="wstr"
+                      length="255"
+                      name="fullReferrer" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[source]"
+                      dataType="wstr"
+                      length="255"
+                      name="source" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[medium]"
+                      dataType="wstr"
+                      length="255"
+                      name="medium" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sourceMedium]"
+                      dataType="wstr"
+                      length="255"
+                      name="sourceMedium" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[date]"
+                      dataType="dbTimeStamp"
+                      name="date" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[channelGrouping]"
+                      dataType="wstr"
+                      length="255"
+                      name="channelGrouping" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[users]"
+                      dataType="i8"
+                      name="users" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[newUsers]"
+                      dataType="i8"
+                      name="newUsers" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sessions]"
+                      dataType="i8"
+                      name="sessions" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[bounces]"
+                      dataType="i8"
+                      name="bounces" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[sessionDuration]"
+                      dataType="r8"
+                      name="sessionDuration" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[organicSearches]"
+                      dataType="i8"
+                      name="organicSearches" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[pageValue]"
+                      dataType="r8"
+                      name="pageValue" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[pageviews]"
+                      dataType="i8"
+                      name="pageviews" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[totalEvents]"
+                      dataType="i8"
+                      name="totalEvents" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[socialInteractions]"
+                      dataType="i8"
+                      name="socialInteractions" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[profileId]"
+                      dataType="wstr"
+                      length="255"
+                      name="profileId" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[profileName]"
+                      dataType="wstr"
+                      length="255"
+                      name="profileName" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[internalWebPropertyId]"
+                      dataType="wstr"
+                      length="255"
+                      name="internalWebPropertyId" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].ExternalColumns[accountId]"
+                      dataType="wstr"
+                      length="255"
+                      name="accountId" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output]"
+                  isErrorOut="true"
+                  name="GoogleAnalyticsSource Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[date]"
+                      name="date" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[users]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[users]"
+                      name="users" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[newUsers]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[newUsers]"
+                      name="newUsers" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sessions]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sessions]"
+                      name="sessions" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[bounces]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[bounces]"
+                      name="bounces" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sessionDuration]"
+                      dataType="r8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sessionDuration]"
+                      name="sessionDuration" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[organicSearches]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[organicSearches]"
+                      name="organicSearches" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[pageValue]"
+                      dataType="r8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[pageValue]"
+                      name="pageValue" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[pageviews]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[pageviews]"
+                      name="pageviews" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[totalEvents]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[totalEvents]"
+                      name="totalEvents" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[socialInteractions]"
+                      dataType="i8"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[socialInteractions]"
+                      name="socialInteractions" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[profileId]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[profileId]"
+                      name="profileId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[profileName]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[profileName]"
+                      name="profileName" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[internalWebPropertyId]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[internalWebPropertyId]"
+                      name="internalWebPropertyId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[accountId]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[accountId]"
+                      name="accountId" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[referralPath]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[referralPath]"
+                      name="referralPath" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[fullReferrer]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[fullReferrer]"
+                      name="fullReferrer" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[source]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[source]"
+                      name="source" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[medium]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[medium]"
+                      name="medium" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sourceMedium]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[sourceMedium]"
+                      name="sourceMedium" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[channelGrouping]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[channelGrouping]"
+                      name="channelGrouping" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorColumnName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="128"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorColumnName]"
+                      name="ErrorColumnName" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorMessage]"
+                      dataType="wstr"
+                      length="4000"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSource Error Output].Columns[ErrorMessage]"
+                      name="ErrorMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Read Data from Google Analytics\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[OLE DB Destination]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Read Data from Google Analytics\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Emmanuel-PC.SSIS Demo]"
+                  connectionManagerRefId="Package.ConnectionManagers[Emmanuel-PC.SSIS Demo]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="date"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[date]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[date]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[users]"
+                      cachedDataType="i8"
+                      cachedName="users"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[users]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[users]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[newUsers]"
+                      cachedDataType="i8"
+                      cachedName="newUsers"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[newUsers]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[newUsers]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[sessions]"
+                      cachedDataType="i8"
+                      cachedName="sessions"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sessions]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessions]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[bounces]"
+                      cachedDataType="i8"
+                      cachedName="bounces"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[bounces]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[bounces]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[sessionDuration]"
+                      cachedDataType="r8"
+                      cachedName="sessionDuration"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sessionDuration]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sessionDuration]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[organicSearches]"
+                      cachedDataType="i8"
+                      cachedName="organicSearches"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[organicSearches]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[organicSearches]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[pageValue]"
+                      cachedDataType="r8"
+                      cachedName="pageValue"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[pageValue]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageValue]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[pageviews]"
+                      cachedDataType="i8"
+                      cachedName="pageviews"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[pageviews]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[pageviews]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[totalEvents]"
+                      cachedDataType="i8"
+                      cachedName="totalEvents"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[totalEvents]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[totalEvents]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[socialInteractions]"
+                      cachedDataType="i8"
+                      cachedName="socialInteractions"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[socialInteractions]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[socialInteractions]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[profileId]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="profileId"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[profileId]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileId]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[profileName]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="profileName"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[profileName]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[profileName]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[internalWebPropertyId]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="internalWebPropertyId"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[internalWebPropertyId]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[internalWebPropertyId]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[accountId]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="accountId"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[accountId]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[accountId]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[referralPath]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="referralPath"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[referralPath]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[referralPath]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[fullReferrer]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="fullReferrer"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[fullReferrer]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[fullReferrer]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[source]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="source"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[source]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[source]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[medium]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="medium"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[medium]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[medium]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[sourceMedium]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="sourceMedium"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sourceMedium]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[sourceMedium]" />
+                    <inputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[channelGrouping]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="channelGrouping"
+                      externalMetadataColumnId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[channelGrouping]"
+                      lineageId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput].Columns[channelGrouping]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[date]"
+                      dataType="dbTimeStamp"
+                      name="date" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[users]"
+                      dataType="i8"
+                      name="users" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[newUsers]"
+                      dataType="i8"
+                      name="newUsers" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sessions]"
+                      dataType="i8"
+                      name="sessions" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[bounces]"
+                      dataType="i8"
+                      name="bounces" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sessionDuration]"
+                      dataType="r8"
+                      name="sessionDuration" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[organicSearches]"
+                      dataType="i8"
+                      name="organicSearches" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[pageValue]"
+                      dataType="r8"
+                      name="pageValue" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[pageviews]"
+                      dataType="i8"
+                      name="pageviews" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[totalEvents]"
+                      dataType="i8"
+                      name="totalEvents" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[socialInteractions]"
+                      dataType="i8"
+                      name="socialInteractions" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[profileId]"
+                      dataType="wstr"
+                      length="255"
+                      name="profileId" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[profileName]"
+                      dataType="wstr"
+                      length="255"
+                      name="profileName" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[internalWebPropertyId]"
+                      dataType="wstr"
+                      length="255"
+                      name="internalWebPropertyId" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[accountId]"
+                      dataType="wstr"
+                      length="255"
+                      name="accountId" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[referralPath]"
+                      dataType="wstr"
+                      length="255"
+                      name="referralPath" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[fullReferrer]"
+                      dataType="wstr"
+                      length="255"
+                      name="fullReferrer" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[source]"
+                      dataType="wstr"
+                      length="255"
+                      name="source" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[medium]"
+                      dataType="wstr"
+                      length="255"
+                      name="medium" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sourceMedium]"
+                      dataType="wstr"
+                      length="255"
+                      name="sourceMedium" />
+                    <externalMetadataColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[channelGrouping]"
+                      dataType="wstr"
+                      length="255"
+                      name="channelGrouping" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Read Data from Google Analytics\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Read Data from Google Analytics\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Read Data from Google Analytics\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Read Data from Google Analytics\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Read Data from Google Analytics.Paths[GoogleAnalyticsSourceOutput]"
+              endId="Package\Read Data from Google Analytics\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="GoogleAnalyticsSourceOutput"
+              startId="Package\Read Data from Google Analytics\Google Analytics Source.Outputs[GoogleAnalyticsSourceOutput]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="234.666666666667,42.6666666666667"
+          Id="Package\Read Data from Google Analytics"
+          TopLeft="311.249995362014,122.199997814894" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Read Data from Google Analytics">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="192,42.6666666666667"
+          Id="Package\Read Data from Google Analytics\Google Analytics Source"
+          TopLeft="186.249997224659,85.7999984657765" />
+        <NodeLayout
+          Size="172,42.6666666666667"
+          Id="Package\Read Data from Google Analytics\OLE DB Destination"
+          TopLeft="181.249997299165,183.949996710718" />
+        <EdgeLayout
+          Id="Package\Read Data from Google Analytics.Paths[GoogleAnalyticsSourceOutput]"
+          TopLeft="282.249997224659,128.466665132443">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-14.9999999254941,55.4833315782746"
+              Start="0,0"
+              End="-14.9999999254941,47.9833315782746">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.7416657891373" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.7416657891373"
+                    Point2="0,27.7416657891373"
+                    Point3="-4,27.7416657891373" />
+                  <mssgle:LineSegment
+                    End="-10.9999999254941,27.7416657891373" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-10.9999999254941,27.7416657891373"
+                    Point2="-14.9999999254941,27.7416657891373"
+                    Point3="-14.9999999254941,31.7416657891373" />
+                  <mssgle:LineSegment
+                    End="-14.9999999254941,47.9833315782746" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Read Data from Google Analytics\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
